@@ -1,6 +1,9 @@
 .wrap {
   margin: 0 auto;
   width: 640px;
+  max-height: 620px;
+  display: flex;
+  flex-direction: column;
 }
 .number {
   text-align: center;
