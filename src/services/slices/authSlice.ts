@@ -28,6 +28,9 @@ const initialState: TAuthState = {
   error: null
 };
 
+const getErrorMessage = (error: unknown, fallback: string): string =>
+  error instanceof Error ? error.message : fallback;
+
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (data: TRegisterData, { rejectWithValue }) => {
@@ -36,8 +39,8 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem('refreshToken', res.refreshToken);
       setCookie('accessToken', res.accessToken);
       return res.user;
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка регистрации');
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err, 'Ошибка регистрации'));
     }
   }
 );
@@ -50,8 +53,8 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('refreshToken', res.refreshToken);
       setCookie('accessToken', res.accessToken);
       return res.user;
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка входа');
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err, 'Ошибка входа'));
     }
   }
 );
@@ -65,8 +68,10 @@ export const fetchUser = createAsyncThunk(
       }
       const res = await getUserApi();
       return res.user;
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка получения пользователя');
+    } catch (err: unknown) {
+      return rejectWithValue(
+        getErrorMessage(err, 'Ошибка получения пользователя')
+      );
     }
   }
 );
@@ -77,8 +82,8 @@ export const updateUser = createAsyncThunk(
     try {
       const res = await updateUserApi(data);
       return res.user;
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка обновления профиля');
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err, 'Ошибка обновления профиля'));
     }
   }
 );
@@ -90,8 +95,8 @@ export const logoutUser = createAsyncThunk(
       await logoutApi();
       localStorage.removeItem('refreshToken');
       deleteCookie('accessToken');
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка выхода');
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err, 'Ошибка выхода'));
     }
   }
 );

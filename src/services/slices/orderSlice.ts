@@ -19,14 +19,17 @@ const initialState: TOrderState = {
   error: null
 };
 
+const getErrorMessage = (error: unknown, fallback: string): string =>
+  error instanceof Error ? error.message : fallback;
+
 export const createOrder = createAsyncThunk(
   'order/createOrder',
   async (ingredients: string[], { rejectWithValue }) => {
     try {
       const data = await orderBurgerApi(ingredients);
       return data.order;
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка оформления заказа');
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err, 'Ошибка оформления заказа'));
     }
   }
 );
@@ -40,8 +43,8 @@ export const fetchOrderByNumber = createAsyncThunk(
         return rejectWithValue('Заказ не найден');
       }
       return data.orders[0];
-    } catch (err: any) {
-      return rejectWithValue(err?.message || 'Ошибка загрузки заказа');
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err, 'Ошибка загрузки заказа'));
     }
   }
 );
