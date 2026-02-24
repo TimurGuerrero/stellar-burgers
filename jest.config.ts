@@ -16,6 +16,10 @@ const config: JestConfigWithTsJest = {
               // настройки для ts-jest
             },
           ],
+        },
+        moduleNameMapper: {
+          '^@api$': '<rootDir>/src/utils/burger-api.ts',
+          '^@utils-types$': '<rootDir>/src/utils/types.ts'
         }
 };
 
