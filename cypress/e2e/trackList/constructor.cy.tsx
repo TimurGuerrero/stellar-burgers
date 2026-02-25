@@ -8,6 +8,11 @@ describe('Конструктор бургера', () => {
     cy.wait('@getIngredients');
   });
 
+  afterEach(() => {
+    cy.clearLocalStorage();
+    cy.clearCookie('accessToken');
+  });
+
   it('добавляет булку и начинку в конструктор', () => {
     cy.contains('li', 'Флюоресцентная булка R2-D3')
       .contains('button', 'Добавить')
@@ -56,7 +61,7 @@ describe('Конструктор бургера', () => {
     cy.get('#modals').children().last().click({ force: true });
     cy.contains('Детали ингредиента').should('not.exist');
   });
-  
+
   it('создаёт заказ, показывает номер и очищает конструктор', () => {
     cy.intercept('GET', '**/api/auth/user', { fixture: 'user.json' }).as('getUser');
     cy.intercept('POST', '**/api/orders', { fixture: 'order.json' }).as('createOrder');
