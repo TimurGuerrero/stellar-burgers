@@ -3,7 +3,8 @@ import {
   constructorReducer,
   addIngredient,
   removeIngredient,
-  moveIngredientDown
+  moveIngredientDown,
+  clearConstructor
 } from './constructorSlice';
 
 const bun: TIngredient = {
@@ -75,5 +76,15 @@ describe('constructorSlice reducer', () => {
 
     expect(state.ingredients[0]._id).toBe('main-2');
     expect(state.ingredients[1]._id).toBe('main-1');
+  });
+  
+  it('должен очищать конструктор по clearConstructor', () => {
+    let state = constructorReducer(undefined, addIngredient(bun));
+    state = constructorReducer(state, addIngredient(main1));
+
+    const clearedState = constructorReducer(state, clearConstructor());
+
+    expect(clearedState.bun).toBeNull();
+    expect(clearedState.ingredients).toEqual([]);
   });
 });
